@@ -1,0 +1,30 @@
+{
+    "name": "Udon Data Reader",
+    "rootNamespace": "",
+    "references": [
+        "VRC.SDK3",
+        "VRC.SDK3.Editor",
+        "VRC.SDKBase",
+        "VRC.SDKBase.Editor",
+        "VRC.Udon"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UDON"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.vrchat.worlds",
+            "expression": "3.5.0",
+            "define": "VRCSDK_WORLDS_3_5_0_OR_GREATER"
+        }
+    ],
+    "noEngineReferences": false
+}

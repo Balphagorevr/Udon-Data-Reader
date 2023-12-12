@@ -1,0 +1,21 @@
+{
+  "name": "com.balphagore.udondatareader",
+  "displayName": "UdonDataReader",
+  "version": "1.0.0",
+  "description": "Udon Data Reader provides advanced methods for reading symbols and variables from serialized(compiled) UDON programs.",
+  "gitDependencies": {},
+  "vpmDependencies": {
+    "com.vrchat.worlds": "3.x.x"
+  },
+  "author": {
+    "name": "Balphagore",
+    "email": "balphagorevr@gmail.com",
+    "url": "https://github.com/Balphagorevr"
+  },
+  "legacyFolders": {},
+  "legacyFiles": {},
+  "localPath": "D:\\UnityPackages\\UdonDataReader\\Packages\\com.balphagore.udondatareader",
+  "type": "library",
+  "unity": "2022.3",
+  "unityRelease": "6f1"
+}
