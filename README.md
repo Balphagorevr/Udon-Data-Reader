@@ -17,7 +17,7 @@ This project is in beta and early development, there will be a lot to add as I c
 |Method Name|Returns|Details|
 |---|---|---|
 |GetProgramData()|UdonProgramData|Returns a UdonProgramData Object consisting of valid data read from the serialized Udon Program asset.|
-|LoadUdonBehaviour(UdonBehaviour behaviour)|Void|Loads the given UdonBehaviour object onto the Explorer for reading.|
+|LoadUdonBehaviour(UdonBehaviour behaviour)|Void|Loads the given UdonBehaviour object onto the Data Reader for reading.|
 
 ## Roadmap
 
