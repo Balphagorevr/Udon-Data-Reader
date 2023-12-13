@@ -7,10 +7,15 @@ This project is in beta and early development, there will be a lot to add as I c
 
 ## Getting Started
 
+### Creator Companion
 1. Add my VCC Repository listing by visiting my [Listing Page](https://balphagorevr.github.io/balphagore-vcc-listings/).
 2. Select your world project and click "Manage Project".
 3. Add Udon Data Reader to your project.
 4. You're ready to use the API.
+
+### Release Packages
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FBalphagorevr%2FUdonDataReader%2Fmain%2FPackages%2Fcom.balphagore.udondatareader%2Fpackage.json&query=%24.version&label=VPM%20Release&color=green&link=https%3A%2F%2Fgithub.com%2FBalphagorevr%2FUdonDataReader%2Freleases)
+
 
 ## API Methods
 
