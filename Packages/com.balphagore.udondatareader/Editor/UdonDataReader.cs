@@ -1,118 +1,72 @@
-﻿/*
-MIT License
-
-Copyright (c) 2023 Balphagore
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
-
-#pragma warning disable IDE1006 // Skip the underscore naming rule violation since we may have to use this convention to prevent network callable events.
-
-using JetBrains.Annotations;
-using VRC.Udon.Common.Interfaces;
+﻿using VRC.Udon.Common.Interfaces;
 using Balphagore.UdonDataReader.Utility;
 using VRC.Udon;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Balphagore.UdonDataReader
 {
-    /// <summary>
-    /// Udon Explorer provides an API to read serialized Udon Programs to extract methods and variables.
-    /// </summary>
-    public class UdonDataReader
+    public static class UdonDataReader
     {
-        #region Fields
-        private UdonBehaviour _udonBehaviour { get; set; }
-        private IUdonProgram _serializedUdonAsset { get; set; }
-        private UdonProgramData _udonProgramData { get; set; }
-        #endregion
-
-        #region Constructors
-        /// <summary>
-        /// Initializes a new Udon Explorer with the provided Udon Behaviour.
-        /// </summary>
-        /// <param name="udonBehaviour">Udon Behaviour to explore.</param>
-        public UdonDataReader(UdonBehaviour udonBehaviour)
+        public static UdonProgramData ReadUdonProgram(UdonBehaviour udonBehaviour)
         {
-            LoadUdonBehaviour(udonBehaviour);
-            _serializedUdonAsset = _udonBehaviour.GetProgram();
-            _udonProgramData = ReadUdonProgram(_serializedUdonAsset);
-        }
+            UdonProgramData programData = new UdonProgramData();
+            List<UdonSymbol> symbols = new List<UdonSymbol>();
 
-        public UdonDataReader() { }
+            IUdonProgram program = udonBehaviour.GetProgram();
 
-        #endregion
+            UdonSymbolTableReader symbolMethodsReader = new UdonSymbolTableReader(program.EntryPoints);
 
-        #region Private Methods
+            UdonSymbolTableReader symbolVariablesReader = new UdonSymbolTableReader(program.SymbolTable);
 
-        private UdonProgramData ReadUdonProgram(IUdonProgram program)
-        {
-            UdonProgramData _data = new UdonProgramData();
-            List<UdonSymbol> _programVariables = new List<UdonSymbol>();
-            List<UdonSymbol> _programMethods = new List<UdonSymbol>();
+            IEnumerable<IUdonSyncMetadata> programSyncData = program.SyncMetadataTable.GetAllSyncMetadata();
 
-            foreach (var variable in program.SymbolTable.GetExportedSymbols())
+            AbstractUdonProgramSource programSource = udonBehaviour.programSource;
+
+            foreach (var variable in symbolVariablesReader.GetExportedSymbols())
             {
-                _programVariables.Add(new UdonSymbol()
-                {
-                    symbolName = variable,
-                    symbolType = program.SymbolTable.GetSymbolType(variable)
-                });
-            }
-            //Ok
-            foreach (var method in program.EntryPoints.GetExportedSymbols())
-            {
-                _programMethods.Add(new UdonSymbol()
-                {
-                    symbolName = method,
-                    symbolType = program.EntryPoints.GetSymbolType(method)
-                });
+                string? dataType = symbolVariablesReader.GetSymbolTypeName(variable);
+                uint address = symbolVariablesReader.GetAddressFromSymbol(variable);
+
+                symbols.Add(new UdonSymbol(variable, dataType, SymbolType.Variable, address, true, programSyncData.Any(s => s.Name == variable)));
             }
 
-            _data.programName = program.InstructionSetIdentifier;
-            _data.exportedMethods = _programMethods.ToArray();
-            _data.exportedVariables = _programVariables.ToArray();
+            foreach (var variable in symbolVariablesReader.GetSymbols())
+            {
+                string? dataType = symbolVariablesReader.GetSymbolTypeName(variable);
+                uint address = symbolVariablesReader.GetAddressFromSymbol(variable);
 
-            return _data;
+                symbols.Add(new UdonSymbol(variable, dataType, SymbolType.Variable, address, false, programSyncData.Any(s => s.Name == variable)));
+            }
+
+            // For exported
+            foreach (var method in symbolMethodsReader.GetExportedSymbols())
+            {
+                string? dataType = symbolMethodsReader.GetSymbolTypeName(method);
+                uint address = symbolMethodsReader.GetAddressFromSymbol(method);
+
+                UdonSymbol methodReturnSymbol = symbols.Where(s => s.symbolName.Contains(method) && s.symbolType == SymbolType.Variable).FirstOrDefault();
+
+                symbols.Add(new UdonSymbol(method, dataType, SymbolType.Method, address, true, returnSymbol: methodReturnSymbol));
+            }
+
+            foreach (var method in symbolMethodsReader.GetSymbols())
+            {
+                string? dataType = symbolMethodsReader.GetSymbolTypeName(method);
+                uint address = symbolMethodsReader.GetAddressFromSymbol(method);
+
+                UdonSymbol methodReturnSymbol = symbols.Where(s => s.symbolName.Contains(method) && s.symbolType == SymbolType.Variable).FirstOrDefault();
+
+                symbols.Add(new UdonSymbol(method, dataType, SymbolType.Method, address, false, returnSymbol: methodReturnSymbol));
+            }
+
+            programData.programName = programSource.name;
+            programData.symbols = symbols.ToArray();
+            programData.updateOrder = program.UpdateOrder;
+            programData.serializedAssetName = programSource.SerializedProgramAsset.name;
+            programData.sourceCompiler = udonBehaviour.programSource.GetType().Name;
+
+            return programData;
         }
-        #endregion
-
-        #region API Methods
-        /// <summary>
-        /// Retrieves the Udon Program Data object generated by the Udon Explorer.
-        /// </summary>
-        /// <returns></returns>
-        [PublicAPI]
-        public UdonProgramData GetProgramData() => _udonProgramData;
-
-        /// <summary>
-        /// Loads the serialized Udon Program data into the Udon Explorer for reading.
-        /// </summary>
-        /// <param name="udonBehaviour"></param>
-        [PublicAPI]
-        public void LoadUdonBehaviour(UdonBehaviour udonBehaviour)
-        {
-            _udonBehaviour = udonBehaviour;
-        }
-        #endregion
-
     }
-
 }
-

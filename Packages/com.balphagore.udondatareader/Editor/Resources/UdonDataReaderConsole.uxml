@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Packages/com.balphagore.udondatareader/Editor/Resources/UdonDataReaderConsole.uss?fileID=7433441132597879392&amp;guid=3da0dc742cf51ca4684f343032ed55b8&amp;type=3#UdonDataReaderConsole" />
+    <uie:ObjectField label="Udon Behaviour" allow-scene-objects="true" focusable="false" type="VRC.Udon.UdonBehaviour, VRC.Udon" name="objUdonBehaviour" style="margin: 10px;" />
+    <ui:VisualElement name="controlPanel" class="background-dark" style="flex-grow: 1; height: initial; min-height: 3px; width: initial; max-height: none;">
+        <ui:Label tabindex="-1" text="Program Data" parse-escape-sequences="true" display-tooltip-when-elided="true" name="programDataLabel" class="section-header" />
+        <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+            <ui:VisualElement name="programIcon" class="background-light" style="flex-grow: 0; flex-shrink: 0; width: 120px; height: 120px;" />
+            <ui:VisualElement name="programInfoView" class="background-light" style="flex-grow: 1;">
+                <ui:TextField picking-mode="Ignore" label="Program Name" readonly="true" name="lblProgramName" focusable="false" class="textField-Info-Readonly" />
+                <ui:TextField picking-mode="Ignore" label="Source Compiler" readonly="true" name="lblSourceCompiler" focusable="false" class="textField-Info-Readonly" />
+                <ui:TextField picking-mode="Ignore" label="Serialized Asset" readonly="true" name="lblSerializedAsset" focusable="true" class="textField-Info-Readonly" style="color: rgb(74, 85, 241); -unity-text-align: upper-left; -unity-font-style: normal; -unity-text-outline-color: rgba(0, 0, 0, 0); text-shadow: 0 0 0 rgba(255, 0, 0, 0);" />
+                <ui:TextField picking-mode="Ignore" label="Sync Mode" readonly="true" name="lblSyncMode" focusable="false" class="textField-Info-Readonly" />
+                <ui:TextField picking-mode="Ignore" label="Update Order" readonly="true" name="lblUpdateOrder" focusable="false" class="textField-Info-Readonly" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="tableView" class="background-dark" style="flex-grow: 0; flex-shrink: 1;">
+        <ui:Label tabindex="-1" text="Program Variables Symbols" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" class="section-header" />
+        <ui:VisualElement name="filterRow" style="flex-grow: 0; flex-direction: row; flex-shrink: 0;">
+            <ui:TextField picking-mode="Ignore" label="Search Symbol" name="variableSearchField" style="align-items: stretch; align-self: auto; flex-shrink: 0; flex-direction: row; flex-wrap: nowrap; flex-basis: auto; min-width: 250px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="variableTable" class="table-view" />
+    </ui:VisualElement>
+    <ui:VisualElement name="tableView" class="background-dark" style="flex-grow: 0; flex-shrink: 1;">
+        <ui:Label tabindex="-1" text="Program Entry Point Symbols(Methods/Event)" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" class="section-header" />
+        <ui:VisualElement name="filterRow" style="flex-grow: 0; flex-direction: row; flex-shrink: 0;">
+            <ui:TextField picking-mode="Ignore" label="Search Symbol" name="methodSearchField" style="align-items: stretch; align-self: auto; flex-shrink: 0; flex-direction: row; flex-wrap: nowrap; flex-basis: auto; min-width: 250px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="methodTable" class="table-view" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,8 +1,8 @@
 {
   "name": "com.balphagore.udondatareader",
   "displayName": "UdonDataReader",
-  "version": "1.0.0",
-  "description": "Udon Data Reader provides advanced methods for reading symbols and variables from serialized(compiled) UDON programs.",
+  "version": "1.1.0",
+  "description": "Udon Data Reader is an editor library providing an API to read Serialized Udon Programs to provide symbols, entry points and other metadata about the Udon program. Refer to the Github for README and documentation on using the API.",
   "gitDependencies": {},
   "vpmDependencies": {
     "com.vrchat.worlds": "3.x.x"

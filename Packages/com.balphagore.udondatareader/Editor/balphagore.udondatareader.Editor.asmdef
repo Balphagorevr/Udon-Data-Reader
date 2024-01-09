@@ -1,12 +1,13 @@
 {
-    "name": "Udon Data Reader",
+    "name": "UdonDataReader",
     "rootNamespace": "",
     "references": [
         "VRC.SDK3",
         "VRC.SDK3.Editor",
         "VRC.SDKBase",
         "VRC.SDKBase.Editor",
-        "VRC.Udon"
+        "VRC.Udon",
+        "UdonSharp.Runtime"
     ],
     "includePlatforms": [
         "Editor"
