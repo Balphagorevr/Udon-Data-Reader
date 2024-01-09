@@ -64,3 +64,4 @@ Assets/PackageMakerWindowData.asset*
 .idea
 .vscode
 *.vsconfig
+Packages/com.vrchat.core.bootstrap/
